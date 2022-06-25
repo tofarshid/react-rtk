@@ -1,17 +1,24 @@
 import React from 'react';
-import Logo from '@assets/images/logo.svg?url';
+import I123 from '@assets/images/I123.svg?url';
+import Header from './global/header';
+import Footer from './global/footer';
 
 const App = () => (
   <div className='App'>
-    <header className='App-header'>
-      <img src={Logo} className='App-logo' alt='logo' />
+    <Header />
+    <header className='App-content'>
+      <img src={I123} />
       <p>
-        <code>src/App.js</code> and save to reload.
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+        been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+        galley of type and scrambled it to make a type specimen book. It has survived not only five
+        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
+        passages, and more recently with desktop publishing software like Aldus PageMaker including
+        versions of Lorem Ipsum.
       </p>
-      <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-        Learn React
-      </a>
     </header>
+    <Footer />
   </div>
 );
 export default App;

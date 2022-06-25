@@ -1,0 +1,109 @@
+service: maps-snsw-web
+plugins:
+  - serverless-s3-sync
+  - serverless-cloudfront-invalidate
+
+package:
+  patterns:
+    - '!.serverless/**'
+    - '!.vscode/**'
+    - '!.github/**'
+    - '!.env*'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-southeast-2
+  stage: ${env:STAGE, 'dev'} # dev, uat OR prod
+
+custom:
+  bucket-name: ${self:service}-dist-${self:provider.stage}
+  alias: ${env:CLOUDFRONT_ALIAS}
+  certificateArn: ${env:CERTIFICATE_ARN}
+  s3Sync:
+    - bucketName: ${self:custom.bucket-name}
+      localDir: dist
+  cloudfrontInvalidate:
+    - distributionIdKey: 'CloudFrontDistributionId'
+      autoInvalidate: true
+      items:
+        - '/*'
+
+resources:
+  Resources:
+    AssetBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucket-name}
+
+    CloudFrontOriginIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: 'origin identity'
+
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: ${self:custom.bucket-name}
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Deny
+              Principal: "*"
+              Action: "s3:*"
+              Resource:
+                - arn:aws:s3:::${self:custom.bucket-name}/*
+                - arn:aws:s3:::${self:custom.bucket-name}
+              Condition:
+                Bool:
+                  aws:SecureTransport: false
+            - Effect: Allow
+              Principal:
+                AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}'
+              Action: s3:GetObject
+              Resource: arn:aws:s3:::${self:custom.bucket-name}/*
+
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        Tags:
+          - Key: platform-waf
+            Value: enabled
+        DistributionConfig:
+          Aliases:
+            - ${self:custom.alias}
+          Origins:
+            - DomainName: ${self:custom.bucket-name}.s3.${self:provider.region}.amazonaws.com
+              Id: S3-${self:custom.bucket-name}
+              S3OriginConfig:
+                OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
+          Enabled: 'true'
+          DefaultCacheBehavior:
+            Compress: 'true'
+            AllowedMethods:
+              - GET
+              - HEAD
+            TargetOriginId: S3-${self:custom.bucket-name}
+            ForwardedValues:
+              QueryString: 'false'
+              Cookies:
+                Forward: none
+            ViewerProtocolPolicy: redirect-to-https
+          ViewerCertificate:
+            AcmCertificateArn: ${self:custom.certificateArn}
+            MinimumProtocolVersion: TLSv1.2_2019
+            SslSupportMethod: sni-only
+          CustomErrorResponses:
+            - ErrorCode: 403
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+            - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+
+  Outputs:
+    CloudFrontDistributionId:
+      Description: CloudFront distribution id.
+      Value:
+        Ref: CloudFrontDistribution

@@ -1,0 +1,43 @@
+{
+  "extends": ["airbnb", "prettier", "plugin:import/errors", "plugin:import/warnings"],
+  "plugins": ["prettier", "prefer-arrow"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "prettier/prettier": ["error"],
+    "no-invalid-this": 2,
+    "no-sequences": 0,
+    "no-return-assign": 0,
+    "no-console": 0,
+    "no-shadow": 0,
+    "no-unused-vars": 1,
+    "arrow-body-style": 0,
+    "react/function-component-definition": 0,
+    "react/prop-types": 0,
+    "func-names": [2, "never"],
+    "prefer-arrow/prefer-arrow-functions": [
+      "error",
+      {
+        "disallowPrototype": true,
+        "singleReturnOnly": true,
+        "classPropertiesAllowed": false
+      }
+    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false }],
+    "func-style": ["error", "expression", { "allowArrowFunctions": true }]
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "fixture": true,
+    "navigator": true,
+    "test": true
+  }
+}

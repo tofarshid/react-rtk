@@ -1,5 +1,5 @@
 import React from 'react';
-import I123 from '@assets/images/I123.svg?url';
+// import I123 from '@assets/images/I123.svg?url';
 import Header from './global/header';
 import Footer from './global/footer';
 
@@ -7,7 +7,7 @@ const App = () => (
   <div className='App'>
     <Header />
     <header className='App-content'>
-      <img src={I123} />
+      {/* <img src={I123} /> */}
       <p>
         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
         been the industry's standard dummy text ever since the 1500s, when an unknown printer took a

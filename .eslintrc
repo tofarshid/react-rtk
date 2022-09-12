@@ -26,7 +26,8 @@
       }
     ],
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": false }],
-    "func-style": ["error", "expression", { "allowArrowFunctions": true }]
+    "func-style": ["error", "expression", { "allowArrowFunctions": true }],
+    "ignorePropertyModificationsFor": true
   },
   "settings": {
     "import/resolver": {

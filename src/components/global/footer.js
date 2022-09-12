@@ -5,7 +5,7 @@ const StyledFooter = styled.header`
 `;
 const Footer = () => (
   <StyledFooter>
-    <h4>Lorem Ipsum</h4>
+    <h4>f-o-o-t-e-r</h4>
   </StyledFooter>
 );
 

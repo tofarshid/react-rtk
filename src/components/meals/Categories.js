@@ -33,13 +33,20 @@ const Categories = ({ selected, setSelected }) => {
           .map((item, i) => (
             <button
               type='button'
-              className={`btn btn-${setActiveColor(active(item))} m-1 p-1`}
+              className={`btn btn-${setActiveColor(active(item))} m-1 p-0 px-2`}
               key={keyify(i)}
               onClick={() => setActive(item)}
             >
               {item}
             </button>
           ))}
+        <button
+          type='button'
+          className='btn btn-dark m-1 p-0 px-2 '
+          onClick={() => setSelected('')}
+        >
+          Clear categories
+        </button>
       </div>
     </>
   );

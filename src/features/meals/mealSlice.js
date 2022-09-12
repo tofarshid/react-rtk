@@ -20,8 +20,13 @@ export const mealSlice = createSlice({
     meals: [],
     loading: 'idle',
     error: null,
+    selectedMealId: 0,
   },
-  reducers: {},
+  reducers: {
+    setMeal: (state, action) => {
+      state.selectedMealId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getCategories.pending, (state, action) => {
       if (state.loadingCategoris === 'idle') {
@@ -62,5 +67,7 @@ export const mealSlice = createSlice({
     });
   },
 });
+
+export const { setMeal } = mealSlice.actions;
 
 export default mealSlice.reducer;
